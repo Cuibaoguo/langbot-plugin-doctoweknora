@@ -1,0 +1,61 @@
+apiVersion: langbot/v1
+kind: Runner
+metadata:
+  name: doc_to_weknora
+  label:
+    en_US: Doc to WeKnora
+    zh_Hans: 文档直传 WeKnora
+  description:
+    en_US: Download Feishu file messages and ingest into a WeKnora knowledge base.
+    zh_Hans: 收到飞书文档消息后自动下载并入库到指定 WeKnora 知识库。
+spec:
+  usages: [event]
+  events: [message.received]
+  config:
+    - name: knowledge_base_id
+      label:
+        en_US: Knowledge Base ID
+        zh_Hans: 知识库 ID
+      description:
+        en_US: Optional. Leave empty to auto-match by the bot UUID.
+        zh_Hans: 可选。留空则按当前机器人自动匹配对应的 WeKnora 知识库。
+      type: string
+      required: false
+      default: ''
+    - name: bot_kb_map
+      label:
+        en_US: Bot-KB Mapping
+        zh_Hans: 机器人-知识库映射
+      description:
+        en_US: "Multi-bot mode. One per line: bot_uuid=knowledge_base_id. Used when knowledge_base_id is empty. Lines starting with # are ignored."
+        zh_Hans: "多机器人场景用。一行一个 bot_uuid=knowledge_base_id，# 开头为注释。knowledge_base_id 留空时按当前机器人 UUID 查此表。"
+      type: string
+      required: false
+      default: ''
+    - name: allowed_ext
+      label:
+        en_US: Allowed Extensions
+        zh_Hans: 允许的扩展名
+      description:
+        en_US: Comma-separated list, e.g. pdf,docx,txt. Empty means all.
+        zh_Hans: 逗号分隔，如 pdf,docx,txt。留空表示全部。
+      type: string
+      required: false
+      default: 'pdf,docx,doc,txt,md'
+    - name: reply_on_success
+      label:
+        en_US: Reply on Success
+        zh_Hans: 成功后回复
+      description:
+        en_US: Send a confirmation message after ingestion.
+        zh_Hans: 入库成功后发送确认消息。
+      type: boolean
+      required: false
+      default: true
+  capabilities:
+    tool_calling: false
+  permissions: {}
+execution:
+  python:
+    path: doc_to_weknora.py
+    attr: DocToWeKnoraRunner
