@@ -6,7 +6,7 @@ metadata:
   label:
     zh_Hans: 飞书文档入库 WeKnora
     en_US: Feishu Doc to WeKnora
-  version: 0.1.1
+  version: 0.1.9
   description:
     zh_Hans: 监听文件消息，自动下载并入库到指定 WeKnora 知识库（支持飞书等平台）
     en_US: Listen file messages from any platform and ingest into a WeKnora knowledge base
@@ -25,6 +25,13 @@ spec:
       zh_Hans: WeKnora API Key
     default: ''
     required: true
+  - name: bot_kb_map
+    type: string
+    label:
+      zh_Hans: 机器人知识库映射
+      en_US: Bot to Knowledge Base Map
+    default: ''
+    required: false
   components:
     Runner:
       fromDirs:
