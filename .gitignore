@@ -1,7 +1,5 @@
-__pycache__/
-*.py[cod]
-*.lbpkg
-.venv/
-venv/
-.DS_Store
-*.log
+﻿__pycache__/
+*.pyc
+dist/
+*.bak
+fix.py
