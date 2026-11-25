@@ -3,6 +3,7 @@ kind: Plugin
 metadata:
   author: pc
   name: DocToWeKnora
+  repository: https://github.com/Cuibaoguo/langbot-plugin-doctoweknora
   label:
     zh_Hans: 飞书文档入库 WeKnora
     en_US: Feishu Doc to WeKnora
@@ -12,6 +13,9 @@ metadata:
     en_US: Listen file messages from any platform and ingest into a WeKnora knowledge base
   icon: assets/icon.svg
 spec:
+  permissions:
+    capabilities: []
+    workspace_operations: []
   config:
   - name: weknora_base_url
     type: string
