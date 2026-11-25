@@ -1,4 +1,4 @@
-"""飞书文档消息 -> 下载 -> 入 WeKnora 知识库"""
+﻿"""飞书文档消息 -> 下载 -> 入 WeKnora 知识库"""
 
 from __future__ import annotations
 
@@ -87,7 +87,6 @@ class DocToWeKnoraRunner(Runner):
             data = await self._download(file_seg)
         except Exception as e:
             await ctx.log(f"下载失败：{e}", "error")
-            self._cleanup(file_seg)
             return
 
         await ctx.log(f"下载完成，{len(data)} 字节，开始入 WeKnora", "debug")
@@ -96,35 +95,11 @@ class DocToWeKnoraRunner(Runner):
             doc_id = await self._upload_to_weknora(base_url, api_key, kb_id, name, data)
         except Exception as e:
             await ctx.log(f"入库失败：{e}", "error")
-            self._cleanup(file_seg)
             return
 
         await ctx.log(f"入库成功：{name} -> {doc_id}", "debug")
-        self._cleanup(file_seg)
-
-    @staticmethod
-    def _cleanup(file_seg):
-        p = getattr(file_seg, "path", None)
-        if not p:
-            return
-        p = str(p)
-        # 只删临时目录下的文件，避免误删用户数据
-        if not (p.startswith("/tmp/") or "/temp/" in p or "/tmp_" in p):
-            return
-        try:
-            import os
-            os.remove(p)
-        except OSError:
-            pass
 
     async def _download(self, file_seg) -> bytes:
-        # 诊断：打印文件段所有非空字段
-        attrs = {k: v for k, v in vars(file_seg).items() if v not in (None, "", b"")}
-        preview = {k: (f"<{len(v)}b>" if isinstance(v, (bytes, str)) and len(v) > 200 else v)
-                   for k, v in attrs.items()}
-        import logging
-        logging.getLogger(__name__).warning(f"[DocToWeKnora] file_seg 字段: {preview}")
-
         # 1. 优先 base64（飞书适配器常见）
         b64 = getattr(file_seg, "base64", None)
         if b64:
@@ -160,7 +135,7 @@ class DocToWeKnoraRunner(Runner):
                 r.raise_for_status()
                 return r.content
 
-        raise RuntimeError(f"无法下载：url={url!r} base64={'有' if b64 else '无'} 字段={list(attrs.keys())}")
+        raise RuntimeError("无法下载：file_seg 无 base64 / data / url 可用")
 
     async def _upload_to_weknora(
         self, base_url: str, api_key: str, kb_id: str, filename: str, data: bytes

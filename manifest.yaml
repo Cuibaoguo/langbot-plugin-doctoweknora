@@ -7,7 +7,7 @@ metadata:
   label:
     zh_Hans: 飞书文档入库 WeKnora
     en_US: Feishu Doc to WeKnora
-  version: 0.1.9
+  version: 0.1.10
   description:
     zh_Hans: 监听文件消息，自动下载并入库到指定 WeKnora 知识库（支持飞书等平台）
     en_US: Listen file messages from any platform and ingest into a WeKnora knowledge base
